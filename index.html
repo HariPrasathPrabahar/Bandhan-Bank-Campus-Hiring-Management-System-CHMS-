@@ -3,212 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bandhan Bank - CHMS Prototype</title>
+    <title>Bandhan Bank - CHMS 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bandhan-blue: #00529b;
-            --bandhan-red: #ed1c24;
-        }
+        :root { --bandhan-blue: #00529b; --bandhan-red: #ed1c24; }
         .bg-bandhan-blue { background-color: var(--bandhan-blue); }
         .text-bandhan-blue { color: var(--bandhan-blue); }
         .border-bandhan-red { border-color: var(--bandhan-red); }
-        .terminal { background-color: #1e1e1e; color: #00ff00; font-family: 'Courier New', Courier, monospace; }
+        .step-active { color: var(--bandhan-blue); font-weight: bold; border-left: 4px solid var(--bandhan-blue); }
+        .step-inactive { color: #9ca3af; border-left: 4px solid #e5e7eb; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
 
-    <nav class="bg-white shadow-md border-b-4 border-bandhan-red sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <div class="flex flex-col">
-                    <span class="text-2xl font-bold text-bandhan-blue tracking-tighter">Bandhan <span class="text-red-600">Bank</span></span>
-                    <span class="text-[10px] uppercase tracking-widest text-gray-500">Campus Hiring Transformation</span>
-                </div>
+    <nav class="bg-white shadow-sm border-b-4 border-bandhan-red sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="text-3xl font-extrabold text-bandhan-blue">Bandhan <span class="text-red-600">Bank</span></div>
             </div>
-            <div class="hidden md:flex space-x-8 font-medium">
-                <button onclick="showTab('candidate')" class="hover:text-bandhan-blue">Candidate Portal</button>
-                <button onclick="showTab('recruiter')" class="hover:text-bandhan-blue">Recruiter Dashboard</button>
-                <button onclick="showTab('analytics')" class="hover:text-bandhan-blue">Campus Analytics</button>
+            <div class="space-x-6 text-sm font-bold uppercase tracking-wide">
+                <button onclick="showTab('recruiter')" class="hover:text-red-600">Recruiter Hub</button>
+                <button onclick="showTab('student')" class="hover:text-red-600">Student Portal</button>
+                <button onclick="showTab('dashboard')" class="hover:text-red-600">Analytics</button>
             </div>
-            <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">RBI Compliance Mode: ON</div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto p-6">
 
-        <div id="candidate-tab" class="tab-content">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-800">Graduate Application Form</h2>
-                    <form id="applyForm" onsubmit="processApplication(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">Full Name (As per Aadhaar)</label>
-                            <input type="text" id="name" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700">CGPA</label>
-                                <input type="number" id="cgpa" step="0.1" required class="w-full p-2 border rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700">Year of Graduation</label>
-                                <input type="number" id="year" value="2026" class="w-full p-2 border rounded mt-1">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">Upload Resume (PDF)</label>
-                            <input type="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded border text-xs text-gray-600">
-                            <input type="checkbox" required> I consent to Bandhan Bank processing my PII data under DPDP Act 2023 for recruitment purposes.
-                        </div>
-                        <button type="submit" class="w-full bg-bandhan-blue text-white font-bold py-3 rounded-lg hover:opacity-90 transition">Submit Application</button>
-                    </form>
-                </div>
-
-                <div class="flex flex-col">
-                    <h3 class="font-bold text-gray-700 mb-2 flex items-center">
-                        <span class="mr-2">⚡</span> Real-time Backend Simulation (RBI Compliance Engine)
-                    </h3>
-                    <div id="terminal" class="terminal p-4 rounded-lg flex-grow min-h-[400px] text-sm overflow-y-auto shadow-inner">
-                        > System Idle... Awaiting application.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="recruiter-tab" class="tab-content hidden">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">Interview Scheduling Matrix</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="p-3">Candidate</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Compliance Check</th>
-                                <th class="p-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="candidateTable">
-                            <tr>
-                                <td class="p-3">Amit Sharma (IIT-K)</td>
-                                <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Shortlisted</span></td>
-                                <td class="p-3 text-xs text-blue-600 font-mono">KYC_PASSED_204</td>
-                                <td class="p-3"><button class="text-bandhan-blue font-bold">Schedule Slot</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="analytics-tab" class="tab-content hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="font-bold mb-4">Hiring Funnel (Live)</h3>
-                    <canvas id="funnelChart"></canvas>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="font-bold mb-4">Campus ROI - Predictive Attrition</h3>
+        <div id="recruiter-tab" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">1. Create Job Posting</h2>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span>IIT Kharagpur</span>
-                            <span class="text-green-600 font-bold">Low Risk (8%)</span>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Role Title</label>
+                            <input type="text" id="jobTitle" placeholder="e.g. Management Trainee" class="w-full p-2 border rounded border-gray-300">
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Required Stream</label>
+                            <select id="jobStream" class="w-full p-2 border rounded">
+                                <option value="MBA">MBA (Finance)</option>
+                                <option value="BTech">B.Tech (CS/IT)</option>
+                                <option value="General">Any Graduate</option>
+                            </select>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span>Regional College A</span>
-                            <span class="text-red-600 font-bold">High Risk (45%)</span>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Min. CGPA Requirement</label>
+                            <input type="number" id="minCGPA" value="7.0" class="w-full p-2 border rounded">
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-red-500 h-2 rounded-full" style="width: 55%"></div>
+                        <button onclick="matchInstitutes()" class="w-full bg-bandhan-blue text-white py-2 rounded font-bold hover:bg-blue-800 transition">Find Best Match Institutes</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">2. Recommended Institutes</h2>
+                    <p class="text-xs text-gray-500 mb-4 italic">Matches based on Ranking, Median Package, and Historical ROI.</p>
+                    <div id="instituteList" class="space-y-3">
+                        <p class="text-gray-400 text-sm">Enter job details to see matches...</p>
+                    </div>
+                    <button id="sendEmailBtn" onclick="sendPlacementEmail()" class="hidden w-full mt-4 bg-green-600 text-white py-2 rounded font-bold">Send Recruitment Offers</button>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">3. My Availability</h2>
+                    <p class="text-xs text-gray-400 mb-4">Set free slots for Candidate Interviews</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="p-2 border rounded hover:bg-blue-50 text-xs">Mon, 10:00 AM</button>
+                        <button class="p-2 border rounded hover:bg-blue-50 text-xs">Mon, 02:00 PM</button>
+                        <button class="p-2 border rounded hover:bg-blue-50 text-xs">Tue, 11:00 AM</button>
+                        <button class="p-2 border rounded hover:bg-blue-50 text-xs">Wed, 04:00 PM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="student-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 space-y-4">
+                    <h2 class="text-xl font-bold text-gray-800">Explore Jobs</h2>
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-bandhan-blue">
+                        <h3 class="font-bold text-bandhan-blue">Management Trainee</h3>
+                        <p class="text-xs text-gray-600">Location: Kolkata/Mumbai</p>
+                        <p class="text-xs mt-2 font-semibold">Eligibility: 7.0+ CGPA</p>
+                        <button onclick="applyJob('Management Trainee')" class="mt-3 text-sm bg-gray-100 px-3 py-1 rounded hover:bg-gray-200">Apply Now</button>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-gray-300">
+                        <h3 class="font-bold text-gray-500">Associate Analyst</h3>
+                        <p class="text-xs text-gray-600">Location: Bangalore</p>
+                        <button class="mt-3 text-sm bg-gray-100 px-3 py-1 rounded cursor-not-allowed">Applied</button>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-md border border-gray-100">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">My Application Progress: <span id="activeJob">Associate Analyst</span></h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-1/4 text-sm font-bold text-green-600">Completed</div>
+                            <div class="w-3/4 pl-4 border-l-4 border-green-500">
+                                <h4 class="font-bold">CV Shortlisted</h4>
+                                <p class="text-xs text-gray-500">AI-Parser verified your credentials against RBI norms.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-1/4 text-sm font-bold text-green-600">Completed</div>
+                            <div class="w-3/4 pl-4 border-l-4 border-green-500">
+                                <h4 class="font-bold">Assessment Cleared</h4>
+                                <p class="text-xs text-gray-500">Score: 88/100. Qualified for Personal Interview.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-1/4 text-sm font-bold text-bandhan-blue">In-Progress</div>
+                            <div class="w-3/4 pl-4 border-l-4 border-bandhan-blue bg-blue-50 p-3 rounded">
+                                <h4 class="font-bold text-bandhan-blue">Interview Scheduling</h4>
+                                <p class="text-xs text-gray-600 mb-3">Please select a preferred slot from the recruiter's calendar.</p>
+                                <select class="text-xs p-1 border rounded">
+                                    <option>Select a slot...</option>
+                                    <option>Mon, 02:00 PM (IST)</option>
+                                    <option>Tue, 11:00 AM (IST)</option>
+                                </select>
+                                <button class="ml-2 bg-bandhan-blue text-white px-3 py-1 text-xs rounded">Confirm Slot</button>
+                            </div>
+                        </div>
+                        <div class="flex items-start opacity-40">
+                            <div class="w-1/4 text-sm font-bold">Upcoming</div>
+                            <div class="w-3/4 pl-4 border-l-4 border-gray-200">
+                                <h4 class="font-bold">Offer Rolled Out</h4>
+                                <p class="text-xs">Subject to final background verification (AML/KYC).</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div id="dashboard-tab" class="tab-content hidden">
+            <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                <h2 class="text-2xl font-bold text-gray-800">Analytics & ROI Command Center</h2>
+                <p class="text-gray-500 mt-2">Integrating Campus Rankings with Internal Performance Data.</p>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <div class="text-3xl font-bold text-bandhan-blue">500</div>
+                        <div class="text-xs uppercase font-bold text-gray-500">Hiring Goal</div>
+                    </div>
+                    <div class="p-4 bg-red-50 rounded-lg">
+                        <div class="text-3xl font-bold text-red-600">10,245</div>
+                        <div class="text-xs uppercase font-bold text-gray-500">Total Applicants</div>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-lg">
+                        <div class="text-3xl font-bold text-green-600">82%</div>
+                        <div class="text-xs uppercase font-bold text-gray-500">Recruitment ROI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <footer class="mt-12 p-8 bg-gray-900 text-white text-center text-sm">
-        <p>© 2026 Bandhan Bank Limited. Internal CHMS Prototype.</p>
-        <p class="text-gray-500 mt-2">Data stored on Local Bank Servers (Kolkata/Mumbai) in compliance with RBI Clause 2.4.</p>
-    </footer>
-
     <script>
-        // Tab Navigation Logic
+        // Mock Database of Institutes
+        const institutes = [
+            { name: "IIM Ahmedabad", rank: 1, stream: "MBA", package: "32 LPA", roi: "High" },
+            { name: "IIM Amritsar", rank: 20, stream: "MBA", package: "16 LPA", roi: "Very High" },
+            { name: "IIT Kharagpur", rank: 5, stream: "BTech", package: "22 LPA", roi: "High" },
+            { name: "FMS Delhi", rank: 3, stream: "MBA", package: "28 LPA", roi: "Exceptional" },
+            { name: "NIT Trichy", rank: 10, stream: "BTech", package: "14 LPA", roi: "High" }
+        ];
+
         function showTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tab + '-tab').classList.remove('hidden');
-            if(tab === 'analytics') loadChart();
         }
 
-        // Backend Simulation Logic
-        const terminal = document.getElementById('terminal');
-        function log(msg, color = '#00ff00') {
-            const time = new Date().toLocaleTimeString();
-            terminal.innerHTML += `<div style="color: ${color}">[${time}] ${msg}</div>`;
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        async function processApplication(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const cgpa = document.getElementById('cgpa').value;
-
-            log(`>>> New Application received: ${name}`, '#fff');
+        function matchInstitutes() {
+            const stream = document.getElementById('jobStream').value;
+            const listDiv = document.getElementById('instituteList');
+            const matches = institutes.filter(inst => inst.stream === stream);
             
-            // AI Parser Simulation
-            await wait(1000);
-            log(`[AI-Parser] Extracting skills and academic data...`);
-            log(`[AI-Parser] JSON Object created. Standardizing format...`);
-
-            // RBI Compliance Engine Simulation
-            await wait(1500);
-            log(`[RBI-Compliance] Running "Fit and Proper" check...`, 'yellow');
-            
-            if (cgpa < 6.0) {
-                log(`[CRITICAL] REJECTED_COMPLIANCE1: CGPA ${cgpa} below threshold.`, 'red');
-                alert("Application does not meet RBI/Bank eligibility criteria.");
-            } else {
-                log(`[SUCCESS] Candidate passed preliminary screening.`, '#00ff00');
-                log(`[Integration] Encrypting PII using AES-256 for local storage.`, '#00ff00');
-                log(`[Communication] Sending slot-selection email to ${name}...`, 'cyan');
-                
-                // Update Recruiter Table
-                const table = document.getElementById('candidateTable');
-                const row = `<tr>
-                    <td class="p-3">${name}</td>
-                    <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Awaiting Slots</span></td>
-                    <td class="p-3 text-xs text-blue-600 font-mono">KYC_PENDING_01</td>
-                    <td class="p-3"><button class="text-bandhan-blue font-bold">Review</button></td>
-                </tr>`;
-                table.innerHTML += row;
-                
-                alert("Application Processed! Check the terminal log for backend steps.");
-            }
-        }
-
-        function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
-
-        // Analytics Chart
-        function loadChart() {
-            const ctx = document.getElementById('funnelChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Applied', 'Shortlisted', 'Interviewed', 'Offered', 'Joined'],
-                    datasets: [{
-                        label: 'Candidates',
-                        data: [10000, 2500, 800, 550, 480],
-                        backgroundColor: '#00529b'
-                    }]
-                }
+            listDiv.innerHTML = "";
+            matches.forEach(inst => {
+                listDiv.innerHTML += `
+                    <div class="p-3 border rounded flex justify-between items-center bg-gray-50">
+                        <div>
+                            <p class="font-bold text-sm">${inst.name}</p>
+                            <p class="text-[10px] text-gray-500">Median: ${inst.package} | ROI: ${inst.roi}</p>
+                        </div>
+                        <input type="checkbox" class="inst-checkbox">
+                    </div>
+                `;
             });
+            document.getElementById('sendEmailBtn').classList.remove('hidden');
+        }
+
+        function sendPlacementEmail() {
+            alert("System Action: Automated recruitment inquiry emails sent to selected Placement Offices including details of the job posting.");
+        }
+
+        function applyJob(title) {
+            document.getElementById('activeJob').innerText = title;
+            alert("Application submitted for " + title + ". Track your progress in the status panel.");
         }
     </script>
 </body>
