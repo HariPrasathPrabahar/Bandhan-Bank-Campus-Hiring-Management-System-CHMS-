@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bandhan Bank - CHMS 2.0</title>
+    <title>Bandhan Bank - CHMS 2.0 (Campus Integration)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bandhan-blue: #00529b; --bandhan-red: #ed1c24; }
         .bg-bandhan-blue { background-color: var(--bandhan-blue); }
         .text-bandhan-blue { color: var(--bandhan-blue); }
         .border-bandhan-red { border-color: var(--bandhan-red); }
-        .step-active { color: var(--bandhan-blue); font-weight: bold; border-left: 4px solid var(--bandhan-blue); }
-        .step-inactive { color: #9ca3af; border-left: 4px solid #e5e7eb; }
+        .tab-content { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
 
     <nav class="bg-white shadow-sm border-b-4 border-bandhan-red sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="text-3xl font-extrabold text-bandhan-blue">Bandhan <span class="text-red-600">Bank</span></div>
-            </div>
+            <div class="text-3xl font-extrabold text-bandhan-blue">Bandhan <span class="text-red-600">Bank</span></div>
             <div class="space-x-6 text-sm font-bold uppercase tracking-wide">
+                <button onclick="showTab('campus')" class="hover:text-red-600 border-b-2 border-transparent hover:border-red-600">Campus Sign-Up</button>
                 <button onclick="showTab('recruiter')" class="hover:text-red-600">Recruiter Hub</button>
                 <button onclick="showTab('student')" class="hover:text-red-600">Student Portal</button>
                 <button onclick="showTab('dashboard')" class="hover:text-red-600">Analytics</button>
@@ -31,48 +29,59 @@
 
     <main class="max-w-7xl mx-auto p-6">
 
-        <div id="recruiter-tab" class="tab-content">
+        <div id="campus-tab" class="tab-content">
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 max-w-4xl mx-auto">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 bg-blue-100 rounded-full mr-4"><svg class="w-6 h-6 text-bandhan-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>
+                    <h2 class="text-2xl font-bold text-gray-800">Institute Partnership Portal</h2>
+                </div>
+                <form id="campusForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-bandhan-blue border-b pb-2">Institute Details</h3>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Institute Name</label><input type="text" class="w-full p-2 border rounded border-gray-300"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Location</label><input type="text" placeholder="City, State" class="w-full p-2 border rounded border-gray-300"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Courses Offered</label><select multiple class="w-full p-2 border rounded h-24 text-sm"><option>MBA Finance</option><option>B.Tech CS/IT</option><option>M.Tech Data Science</option><option>B.Com Hons</option></select></div>
+                    </div>
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-bandhan-blue border-b pb-2">Batch Profile (Current Year)</h3>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Batch Size</label><input type="number" class="w-full p-2 border rounded"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Avg. Work Ex (Months)</label><input type="number" class="w-full p-2 border rounded"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Background Diversity</label>
+                            <div class="flex space-x-2 text-[10px] mt-2">
+                                <span class="bg-gray-100 px-2 py-1 rounded">Engineers: 60%</span>
+                                <span class="bg-gray-100 px-2 py-1 rounded">Commerce: 30%</span>
+                                <span class="bg-gray-100 px-2 py-1 rounded">Arts: 10%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="button" onclick="registerCampus()" class="w-full bg-bandhan-blue text-white py-3 rounded-lg font-bold hover:bg-blue-800 shadow-lg">Submit Campus Profile to Bandhan Bank Database</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="recruiter-tab" class="tab-content hidden">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
                     <h2 class="text-xl font-bold mb-4 text-gray-800">1. Create Job Posting</h2>
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Role Title</label>
-                            <input type="text" id="jobTitle" placeholder="e.g. Management Trainee" class="w-full p-2 border rounded border-gray-300">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Required Stream</label>
-                            <select id="jobStream" class="w-full p-2 border rounded">
-                                <option value="MBA">MBA (Finance)</option>
-                                <option value="BTech">B.Tech (CS/IT)</option>
-                                <option value="General">Any Graduate</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Min. CGPA Requirement</label>
-                            <input type="number" id="minCGPA" value="7.0" class="w-full p-2 border rounded">
-                        </div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Role Title</label><input type="text" id="jobTitle" placeholder="e.g. Management Trainee" class="w-full p-2 border rounded border-gray-300"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase">Required Stream</label><select id="jobStream" class="w-full p-2 border rounded"><option value="MBA">MBA (Finance)</option><option value="BTech">B.Tech (CS/IT)</option><option value="General">Any Graduate</option></select></div>
                         <button onclick="matchInstitutes()" class="w-full bg-bandhan-blue text-white py-2 rounded font-bold hover:bg-blue-800 transition">Find Best Match Institutes</button>
                     </div>
                 </div>
-
                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
                     <h2 class="text-xl font-bold mb-4 text-gray-800">2. Recommended Institutes</h2>
-                    <p class="text-xs text-gray-500 mb-4 italic">Matches based on Ranking, Median Package, and Historical ROI.</p>
-                    <div id="instituteList" class="space-y-3">
-                        <p class="text-gray-400 text-sm">Enter job details to see matches...</p>
-                    </div>
-                    <button id="sendEmailBtn" onclick="sendPlacementEmail()" class="hidden w-full mt-4 bg-green-600 text-white py-2 rounded font-bold">Send Recruitment Offers</button>
+                    <div id="instituteList" class="space-y-3"><p class="text-gray-400 text-sm">Enter job details to see matches...</p></div>
+                    <button id="sendEmailBtn" onclick="sendPlacementEmail()" class="hidden w-full mt-4 bg-green-600 text-white py-2 rounded font-bold">Send Automated Invite to Selected</button>
                 </div>
-
                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
                     <h2 class="text-xl font-bold mb-4 text-gray-800">3. My Availability</h2>
-                    <p class="text-xs text-gray-400 mb-4">Set free slots for Candidate Interviews</p>
                     <div class="grid grid-cols-2 gap-2">
                         <button class="p-2 border rounded hover:bg-blue-50 text-xs">Mon, 10:00 AM</button>
                         <button class="p-2 border rounded hover:bg-blue-50 text-xs">Mon, 02:00 PM</button>
                         <button class="p-2 border rounded hover:bg-blue-50 text-xs">Tue, 11:00 AM</button>
-                        <button class="p-2 border rounded hover:bg-blue-50 text-xs">Wed, 04:00 PM</button>
                     </div>
                 </div>
             </div>
@@ -81,79 +90,38 @@
         <div id="student-tab" class="tab-content hidden">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-1 space-y-4">
-                    <h2 class="text-xl font-bold text-gray-800">Explore Jobs</h2>
+                    <h2 class="text-xl font-bold text-gray-800">Available Drives</h2>
                     <div class="bg-white p-4 rounded-lg shadow border-l-4 border-bandhan-blue">
                         <h3 class="font-bold text-bandhan-blue">Management Trainee</h3>
                         <p class="text-xs text-gray-600">Location: Kolkata/Mumbai</p>
-                        <p class="text-xs mt-2 font-semibold">Eligibility: 7.0+ CGPA</p>
                         <button onclick="applyJob('Management Trainee')" class="mt-3 text-sm bg-gray-100 px-3 py-1 rounded hover:bg-gray-200">Apply Now</button>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-gray-300">
-                        <h3 class="font-bold text-gray-500">Associate Analyst</h3>
-                        <p class="text-xs text-gray-600">Location: Bangalore</p>
-                        <button class="mt-3 text-sm bg-gray-100 px-3 py-1 rounded cursor-not-allowed">Applied</button>
-                    </div>
                 </div>
-
                 <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-md border border-gray-100">
-                    <h2 class="text-xl font-bold mb-6 text-gray-800">My Application Progress: <span id="activeJob">Associate Analyst</span></h2>
-                    
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">Tracking: <span id="activeJob" class="text-bandhan-blue">Management Trainee</span></h2>
                     <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="w-1/4 text-sm font-bold text-green-600">Completed</div>
-                            <div class="w-3/4 pl-4 border-l-4 border-green-500">
-                                <h4 class="font-bold">CV Shortlisted</h4>
-                                <p class="text-xs text-gray-500">AI-Parser verified your credentials against RBI norms.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-1/4 text-sm font-bold text-green-600">Completed</div>
-                            <div class="w-3/4 pl-4 border-l-4 border-green-500">
-                                <h4 class="font-bold">Assessment Cleared</h4>
-                                <p class="text-xs text-gray-500">Score: 88/100. Qualified for Personal Interview.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-1/4 text-sm font-bold text-bandhan-blue">In-Progress</div>
-                            <div class="w-3/4 pl-4 border-l-4 border-bandhan-blue bg-blue-50 p-3 rounded">
-                                <h4 class="font-bold text-bandhan-blue">Interview Scheduling</h4>
-                                <p class="text-xs text-gray-600 mb-3">Please select a preferred slot from the recruiter's calendar.</p>
-                                <select class="text-xs p-1 border rounded">
-                                    <option>Select a slot...</option>
-                                    <option>Mon, 02:00 PM (IST)</option>
-                                    <option>Tue, 11:00 AM (IST)</option>
-                                </select>
-                                <button class="ml-2 bg-bandhan-blue text-white px-3 py-1 text-xs rounded">Confirm Slot</button>
-                            </div>
-                        </div>
-                        <div class="flex items-start opacity-40">
-                            <div class="w-1/4 text-sm font-bold">Upcoming</div>
-                            <div class="w-3/4 pl-4 border-l-4 border-gray-200">
-                                <h4 class="font-bold">Offer Rolled Out</h4>
-                                <p class="text-xs">Subject to final background verification (AML/KYC).</p>
-                            </div>
-                        </div>
+                        <div class="flex items-start"><div class="w-1/4 text-sm font-bold text-green-600">Completed</div><div class="w-3/4 pl-4 border-l-4 border-green-500"><h4 class="font-bold">CV Shortlisted</h4><p class="text-xs text-gray-500">AI-Parser verified your credentials against RBI norms.</p></div></div>
+                        <div class="flex items-start"><div class="w-1/4 text-sm font-bold text-bandhan-blue">In-Progress</div><div class="w-3/4 pl-4 border-l-4 border-bandhan-blue bg-blue-50 p-3 rounded"><h4 class="font-bold text-bandhan-blue">Pick Interview Slot</h4><select class="text-xs p-1 border rounded"><option>Mon, 02:00 PM (IST)</option><option>Tue, 11:00 AM (IST)</option></select><button class="ml-2 bg-bandhan-blue text-white px-3 py-1 text-xs rounded">Confirm</button></div></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="dashboard-tab" class="tab-content hidden">
-            <div class="bg-white p-6 rounded-xl shadow-md text-center">
-                <h2 class="text-2xl font-bold text-gray-800">Analytics & ROI Command Center</h2>
-                <p class="text-gray-500 mt-2">Integrating Campus Rankings with Internal Performance Data.</p>
-                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 bg-blue-50 rounded-lg">
-                        <div class="text-3xl font-bold text-bandhan-blue">500</div>
-                        <div class="text-xs uppercase font-bold text-gray-500">Hiring Goal</div>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-8">Hiring Command Center</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-blue-50 rounded-xl border border-blue-100 text-center">
+                        <div class="text-4xl font-black text-bandhan-blue">88%</div>
+                        <div class="text-sm font-bold text-gray-500 uppercase mt-2">Retention Rate (Campus Hires)</div>
                     </div>
-                    <div class="p-4 bg-red-50 rounded-lg">
-                        <div class="text-3xl font-bold text-red-600">10,245</div>
-                        <div class="text-xs uppercase font-bold text-gray-500">Total Applicants</div>
+                    <div class="p-6 bg-red-50 rounded-xl border border-red-100 text-center">
+                        <div class="text-4xl font-black text-red-600">IIM Amritsar</div>
+                        <div class="text-sm font-bold text-gray-500 uppercase mt-2">Top Performing Campus (ROI)</div>
                     </div>
-                    <div class="p-4 bg-green-50 rounded-lg">
-                        <div class="text-3xl font-bold text-green-600">82%</div>
-                        <div class="text-xs uppercase font-bold text-gray-500">Recruitment ROI</div>
+                    <div class="p-6 bg-green-50 rounded-xl border border-green-100 text-center">
+                        <div class="text-4xl font-black text-green-600">4.2 Days</div>
+                        <div class="text-sm font-bold text-gray-500 uppercase mt-2">Avg. Time-to-Offer</div>
                     </div>
                 </div>
             </div>
@@ -162,13 +130,10 @@
     </main>
 
     <script>
-        // Mock Database of Institutes
         const institutes = [
-            { name: "IIM Ahmedabad", rank: 1, stream: "MBA", package: "32 LPA", roi: "High" },
-            { name: "IIM Amritsar", rank: 20, stream: "MBA", package: "16 LPA", roi: "Very High" },
-            { name: "IIT Kharagpur", rank: 5, stream: "BTech", package: "22 LPA", roi: "High" },
-            { name: "FMS Delhi", rank: 3, stream: "MBA", package: "28 LPA", roi: "Exceptional" },
-            { name: "NIT Trichy", rank: 10, stream: "BTech", package: "14 LPA", roi: "High" }
+            { name: "IIM Ahmedabad", stream: "MBA", package: "32 LPA" },
+            { name: "IIM Amritsar", stream: "MBA", package: "16 LPA" },
+            { name: "IIT Kharagpur", stream: "BTech", package: "22 LPA" }
         ];
 
         function showTab(tab) {
@@ -180,30 +145,16 @@
             const stream = document.getElementById('jobStream').value;
             const listDiv = document.getElementById('instituteList');
             const matches = institutes.filter(inst => inst.stream === stream);
-            
             listDiv.innerHTML = "";
             matches.forEach(inst => {
-                listDiv.innerHTML += `
-                    <div class="p-3 border rounded flex justify-between items-center bg-gray-50">
-                        <div>
-                            <p class="font-bold text-sm">${inst.name}</p>
-                            <p class="text-[10px] text-gray-500">Median: ${inst.package} | ROI: ${inst.roi}</p>
-                        </div>
-                        <input type="checkbox" class="inst-checkbox">
-                    </div>
-                `;
+                listDiv.innerHTML += `<div class="p-3 border rounded flex justify-between bg-gray-50"><p class="font-bold text-sm">${inst.name}</p><input type="checkbox" checked></div>`;
             });
             document.getElementById('sendEmailBtn').classList.remove('hidden');
         }
 
-        function sendPlacementEmail() {
-            alert("System Action: Automated recruitment inquiry emails sent to selected Placement Offices including details of the job posting.");
-        }
-
-        function applyJob(title) {
-            document.getElementById('activeJob').innerText = title;
-            alert("Application submitted for " + title + ". Track your progress in the status panel.");
-        }
+        function registerCampus() { alert("Campus Profile Saved! Bandhan Bank's Match Engine will now consider your institute for upcoming drives."); }
+        function sendPlacementEmail() { alert("System Action: Invites sent to selected TPO dashboards."); }
+        function applyJob(title) { alert("Applied! Check status in Student Portal."); }
     </script>
 </body>
 </html>
